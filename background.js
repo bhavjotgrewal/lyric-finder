@@ -40,11 +40,11 @@ function  printInfo() {
         var data = JSON.parse(this.responseText);
         var song = data.item.name
         var artist = data.item.artists[0].name
-        fetchAsync(song, artist);
+        getLyrics(song, artist);
     }
 }
 
-async function fetchAsync (song, artist) {
+async function getLyrics (song, artist) {
     let response = await fetch(`https://api.lyrics.ovh/v1/${artist}/${song}`);
     let data = await response.json();
     return alert(data.lyrics);
