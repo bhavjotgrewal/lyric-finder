@@ -30,11 +30,25 @@ function callApi(method, url, body, callback){
     let xhr = new XMLHttpRequest();
     xhr.open(method, url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+    xhr.setRequestHeader('Authorization', 'Bearer ' + ACCESS_TOKEN);
     xhr.send(body);
     xhr.onload = callback;
 }
 
+function  printInfo() {
+    if (this.status == 200) {
+        var data = JSON.parse(this.responseText);
+        var song = data.item.name
+        var artist = data.item.artists[0].name
+        fetchAsync(song, artist);
+    }
+}
+
+async function fetchAsync (song, artist) {
+    let response = await fetch(`https://api.lyrics.ovh/v1/${artist}/${song}`);
+    let data = await response.json();
+    return alert(data.lyrics);
+}
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -61,6 +75,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         if (state === STATE) {
                             console.log("SUCCESS")
                             user_signed_in = true;
+
+                            callApi("GET", "https://api.spotify.com/v1/me/player/currently-playing", null, printInfo);
             
                             setTimeout(() => {
                                 ACCESS_TOKEN = '';
