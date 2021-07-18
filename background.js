@@ -45,9 +45,9 @@ function  printInfo() {
 }
 
 async function getLyrics (song, artist) {
-    let response = await fetch(`https://api.lyrics.ovh/v1/${artist}/${song}`);
-    let data = await response.json();
-    return alert(data.lyrics);
+    fetch(`http://localhost:3000/api/${artist}/${song}`)
+        .then(res => res.json())
+        .then(data => alert(data.lyric));
 }
 
 
